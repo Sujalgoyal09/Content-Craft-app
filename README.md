@@ -1,1 +1,1 @@
-# 📝 React Blog App
+# 📝 ContentCraft – AI-Powered CMS Platform
