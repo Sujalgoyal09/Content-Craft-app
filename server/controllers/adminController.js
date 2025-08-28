@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import blog from '../models/Blog';
 
 export const adminLogin = async(req, res)=>{
     try{
@@ -15,4 +16,52 @@ export const adminLogin = async(req, res)=>{
     }catch(error){
         res.json({success: false, message: error.message})
     }
+}
+
+
+export const getAllBlogsAdmin = async (req, res) =>{ 
+    try { 
+        const blogs = await blog.find({}).sort({createdAt: -1}); 
+        res.json({success: true, blogs}) 
+
+    } catch (error) { 
+        res.json({success: false, message: error.message}) 
+
+    } 
+} 
+
+export const getAllComments = async (req, res) =>{ 
+    try { 
+        const comments = await Comment.find({}).populate("blog").sort({createdAt: 
+        -1}) 
+        res.json({success: true, comments}) 
+    } catch (error) { 
+        res.json({success: false, message: error.message}) 
+    }
+}
+
+export const getDashboard = async (req, res) =>{
+try {
+const recentBlogs = await blog.find({}).sort({ createdAt: -1 }).limit(5);
+const blogs = await blog.countDocuments();
+const comments = await Component.countDocuments()
+const drafts = await blog.countDocuments({isPublished: false})
+const dashboardData = {
+blogs, comments, drafts, recentBlogs
+}
+res.json({success: true, dashboardData})| I
+} catch (error) {
+res.json({success: false, message: error.message})
+}
+}
+
+
+export const approveCommentById = async (req, res) =>{
+try {
+const {id} = req.body;
+await Comment.findByIdAndUpdate(id, {isApproved: true});
+res.json({success: true, message:"Comment approved successfully" })
+} catch (error) {
+res.json({success: false, message: error.message})
+}
 }
